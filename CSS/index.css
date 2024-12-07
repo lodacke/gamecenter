@@ -1,0 +1,45 @@
+@font-face {
+    font-family: Inter;
+    src: url("/media/Inter/static/Inter_18pt-Light.ttf");
+}
+
+body{
+    margin: 0px;
+    background-color: black;
+    display: grid;
+    grid-template-columns: repeat(2, 20vw 80vw);
+    font-family: Inter;
+}
+
+nav{
+    grid-template-columns: 1;
+    height: 100vh;
+    max-width: 10vw;
+    padding: 10px;
+    display: flex;
+    border-radius: 5px;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: rgb(26, 25, 25);
+    align-self: center;
+}
+
+nav > *{
+    background-color: rgb(0, 0, 0);
+    padding: 10%;
+    border: 1px solid rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: color 0.3s ease-in-out;
+}
+
+
+nav > *:hover{
+    background-color: black;
+    color: white;
+}
+
+
+
+

@@ -1,0 +1,31 @@
+#landing{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column: 2;
+}
+
+.container{
+    width: 70vw;
+    display: flex;
+    justify-content: space-between;
+}
+
+.static-line{
+    height: 60vh;
+    width: 2px;
+    background-color: white;
+    margin-right: 2%;
+}
+
+.welcome-mess > *{
+    color: white;
+}
+
+.welcome-mess > h1{
+    font-size: 60px;
+}
+
+.welcome-mess > p{
+    width: 70%;
+}

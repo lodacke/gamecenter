@@ -1,0 +1,82 @@
+#tic-tac{
+    display: flex;
+    align-items: center;
+    grid-column: 2;
+}
+
+.intro-tic-tac{
+    color:white;
+}
+
+.intro-tic-tac > p{
+    margin-top: -30px;
+}
+
+.tic-tac-container{
+    width: 70vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-tic-tac{
+ margin-left: 2%;
+ margin-top: 4%;
+}
+
+.tic-tac-option{
+    border-radius: 5%;
+    font-size: 30px;
+    margin-top: 5%;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: yellow;
+    cursor: pointer;
+}
+
+.retry{
+    background-image: url("/media/Inter/retry.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 5%;
+    font-size: 30px;
+    margin-top: 5%;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: yellow;
+    cursor: pointer;
+    height: 70px;
+}
+
+.tic-tac-option:not([draggable="true"]) {
+    opacity: 0.5;
+}
+
+.tic-tac-boardStatus > p{
+color: white;
+text-align: center;
+}
+
+.tic-tac-board{
+    background-color: white;
+    border-radius: 5%;
+    height: 60vh;
+    width: 30vw;
+    border: 1px solid black;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.tic-tac-space{
+    border: 0.5px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+}
+
+#tic-tac > p{
+    color: white;
+    text-align: center;
+}

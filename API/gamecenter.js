@@ -3,7 +3,7 @@ import { renderLanding } from '../index.js';
 
 export const gameBase = [
     {
-        name: "landing",
+        name: "Landing",
         render: renderLanding
     },
     {
