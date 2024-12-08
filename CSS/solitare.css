@@ -26,11 +26,27 @@
     height: var(--card-height);
     width: var(--card-width);
     border: 1px solid white;
-    
+}
+
+.card-preview{
+    align-self: center;
+    top: 30px !important;
+}
+
+.deck-preview > * {
+  animation: foldOver 0.3s forwards; 
 }
 
 .deck > *{
-top: 32px;
+    align-self: center;
+    top: 30px !important;
+}
+
+.deck > p{
+    color: white;
+    margin-top: 75%;
+    text-align: center;
+    cursor: pointer;
 }
 
 .card-container{
@@ -137,3 +153,17 @@ top: 32px;
     opacity: 0;
 }
 
+@keyframes foldOver {
+  0% {
+    transform: rotateY(-90deg) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: rotateY(-30deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateY(0deg) scale(1); 
+    opacity: 1;
+  }
+}

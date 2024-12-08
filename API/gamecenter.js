@@ -1,6 +1,6 @@
 import { TicTac } from '../games/tictac.js';
 import { renderLanding } from '../index.js';
-import { renderSolitare } from '../WIP/Previousssolitare.js';
+import { renderSolitare } from '../games/solitare.js';
 
 export const gameBase = [
     {

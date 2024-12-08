@@ -2,6 +2,9 @@ import { swapCSS } from "../Utilities/swapCSS.js";
 import { main } from "../Utilities/variables.js";
 import { renderDeck } from "../API/gamecenter.js";
 
+let globalDeck = [];
+let createdCards = [];
+
 export function renderSolitare () {
 
     swapCSS("solitare");
@@ -11,23 +14,33 @@ export function renderSolitare () {
     main.innerHTML = `
     <div class="top-row">
         <div class="deck-view">
-            <div class="deck"></div>
+            <div class="deck">
+                <p>Repeat</p>
+            </div>
             <div class="deck-preview"></div>
         </div>
         <div class="suit-collection"></div>
     </div>
     <div class="card-container"></div>
     `;
+    
+    if (globalDeck.length === 0) {
+        globalDeck = renderDeck();
+        shuffleDeck(globalDeck);
+    }
+
+    const cards = globalDeck.slice(0, 28);
+    globalDeck = globalDeck.slice(28);
 
     let cardContainer = document.querySelector(".card-container");
     for(let i = 1; i <= 7; i++){
        let cardPosition = document.createElement("div");
-       cardPosition.classList.add("card-position");
+       cardPosition.classList.add(`card-position`);
        cardContainer.append(cardPosition);
 
         for (let j = 0; j < i; j++) { 
             let cardType = (j === i - 1) ? "faceUp" : "faceDown";    
-            let card = getCard(cardType);
+            let card = getCard(cardType, cards);
             cardPosition.append(card);
         }
     }
@@ -43,81 +56,55 @@ export function renderSolitare () {
         suitCollection.append(cardContainer)
     }  
 
-    let suitContainers = document.querySelectorAll(".suit-container");
-    suitContainers.forEach((container, i) => {
-        container.addEventListener("dragover", (e) => {
-            e.preventDefault(); 
-        });
+    deckDisplay();
 
-        container.addEventListener("drop", (e) => {
-            e.preventDefault();
+    let dropContainers = document.querySelectorAll(".suit-container");
+    let dropCards= document.querySelectorAll(".faceUp")
 
-            const draggedValue = e.dataTransfer.getData("key");
-
-            console.log("Dropped value:", draggedValue);
-            });
-    });  
-    deckDisplay()
+    dropSuit(dropContainers)
 }
 
-function getCard(typeofCard){
-    
-    let deck = renderDeck()
-    // shuffle deck
+
+function checkCard(){
+    let deck = renderDeck();
     for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [deck[i], deck[j]] = [deck[j], deck[i]]; 
-    }   
+    } 
+
+    const cards = deck.slice(0, 28); 
+    const remainingDeck = deck.slice(28); 
+
+    return {cards, remainingDeck}
+}
+
+function getCard(typeofCard, array){
+
     let cardDom; 
 
-    let createdCards = JSON.parse(localStorage.getItem("createdCards"));
-          if (!Array.isArray(createdCards)) {
-        createdCards = []; 
-    }
+    for (let card of array) {
+        if (!createdCards.find((c) => c.suit === card.suit && c.value === card.value)) {
+            createdCards.push(card);
+       
+            let dressedCard;
+            let dressedImg;
 
-    for (let card of deck) {
-        let dressedCard;
-        let dressedImg;
-
-        let sameCard = createdCards.find(existingCard => 
-            existingCard.suit === card.suit && 
-            existingCard.value === card.value && 
-            existingCard.color === card.color
-        );
-
-        if (!sameCard) {
             cardDom = document.createElement("div");
+
             switch(card.value) {
-                case 11:
-                    dressedCard = 'J';
-                    break;
-                case 12:
-                    dressedCard = 'Q';
-                    break;
-                case 13:
-                    dressedCard = 'K';
-                    break;
-                case 1:
-                    dressedCard = 'A';
-                    break;
-                default:
-                    dressedCard = card.value;
+                case 11: dressedCard = 'J'; break;
+                case 12: dressedCard = 'Q'; break;
+                case 13: dressedCard = 'K'; break;
+                case 1: dressedCard = 'A'; break;
+                default: dressedCard = card.value;
+            }
+            switch(card.suit) {
+                case "diamonds": dressedImg = "../media/diamond.svg"; break;
+                case "clubs": dressedImg = "../media/cloves.svg"; break;
+                case "spades": dressedImg = "../media/spades.svg"; break;
+                case "hearts": dressedImg = "../media/heart.svg"; break;
             }
 
-            switch(card.suit) {
-                case "diamonds":dressedImg = "../media/diamond.svg"
-                    break;
-                case "clubs":
-                    dressedImg = "../media/cloves.svg";
-                    break;
-                case "spades":
-                    dressedImg = "../media/spades.svg";
-                    break;
-                case "hearts":
-                    dressedImg = "../media/heart.svg";
-                    break;
-            }
-            
             cardDom.innerHTML = `
             <div>
                 <p>${dressedCard}</p>
@@ -127,46 +114,99 @@ function getCard(typeofCard){
             <div class="card-bottom">
                 <p>${dressedCard}</p>
                 <img src="${dressedImg}"></img>
-            </div> `;
+            </div>`;
 
-            cardDom.classList.add(`${card.suit},${card.color}`);
-            cardDom.classList.add("card");
-
+            cardDom.classList.add(`${card.suit}`, `${card.color}`);
             if(typeofCard === "faceUp"){
-                cardDom.classList.add("faceUp");
+                cardDom.classList.add("card");
                 cardDom.setAttribute("draggable", "true");
             } else {
                 cardDom.classList.add("faceDown");
+                cardDom.classList.add("card");
             }
-            
-            createdCards.push(card);
-            localStorage.setItem("createdCards", JSON.stringify(createdCards));
-            break;
+            return cardDom;
         }
     }
-    return cardDom;
 }
 
-function deckDisplay(){
-    let deck = renderDeck()
-    let createdCards = JSON.parse(localStorage.getItem("createdCards"));
+function deckDisplay() {
 
-    let previewDeck = document.querySelector(".deck-preview");
-    let preview = getCard("faceUp")
-    previewDeck.append(preview)
+    let deckDom = document.querySelector(".deck");
+    let previewDom = document.querySelector(".deck-preview");
 
-    for (let card of deck) {
+    for(let i = 0; i < globalDeck.length; i++){
+        let faceDownCard = getCard("faceDown", globalDeck);
+        deckDom.append(faceDownCard);
+    }
 
-        let sameCard = createdCards.find(existingCard => 
-            existingCard.suit === card.suit && 
-            existingCard.value === card.value && 
-            existingCard.color === card.color
-        );
+    let facingDownCards = deckDom.querySelectorAll('.card');
 
-        if(!sameCard){
-            let deckDom = document.querySelector(".deck");
-            let faceDown = getCard("faceDown")
-            deckDom.append(faceDown)
-        }
+    for (let i = 0; i < facingDownCards.length; i++) {
+        let card = facingDownCards[i];
+        card.addEventListener("click", () => {
+            card.classList.remove("faceDown");
+            card.classList.add("card-preview");
+            card.setAttribute("draggable", "true")
+            previewDom.append(card);
+        });
+
+        deckDom.children[0].addEventListener("click", () => { 
+            for(let i = 0; i < previewDom.children.length; i++){
+                card.classList.add("faceDown");
+                card.setAttribute("draggable", "false")
+                deckDom.append(card)
+            }    
+        }) 
+
+    }
+}
+
+function shuffleDeck(deck) {
+    for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+}
+
+function dropSuit(dropContainers) {
+    const hierarchy = ["A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+
+    dropContainers.forEach((container) => {
+        container.addEventListener("dragover", (e) => {
+            e.preventDefault(); 
+        });
+
+        container.addEventListener("drop", (e) => {
+            e.preventDefault();
+
+            const draggedValue = e.dataTransfer.getData("key");
+            const draggedInnerHTML = draggedValue.innerHTML;
+            console.log(draggedInnerHTML)
+            console.log("Dropped value:", draggedValue);
+
+            const children = container.children;
+            if (children.length > 0) {
+                const lastCard = children[children.length - 1];
+                const lastCardValue = lastCard.querySelector("div > p").innerText; // Assuming the value is in a <p> tag
+                const nextCardValue = getNextCardValue(lastCardValue);
+                
+                if (hierarchy.indexOf(draggedValue) === hierarchy.indexOf(nextCardValue) + 1) {
+                    container.append(draggedValue);
+                } else {
+                    console.log("Card cannot be added in this order.");
+                }
+            } else {
+                if (draggedValue === "A") {
+                    container.append(draggedValue);
+                } else {
+                    console.log("You must start with an Ace.");
+                }
+            }
+        });
+    });
+
+    function getNextCardValue(lastCardValue) {
+        const index = hierarchy.indexOf(lastCardValue);
+        return index !== -1 && index < hierarchy.length - 1 ? hierarchy[index + 1] : null;
     }
 }
