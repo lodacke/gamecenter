@@ -45,7 +45,8 @@ export function renderDeck (){
             let card = {
                 value: i,
                 color: suit.color,
-                suit: suit.suit
+                suit: suit.suit,
+                id: crypto.randomUUID()
             }
         deck.push(card)
         }

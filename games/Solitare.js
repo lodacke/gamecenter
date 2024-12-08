@@ -51,7 +51,6 @@ export function renderSolitare () {
     for(let i = 0; i < color.length; i++){
         let cardContainer = document.createElement("div");
         cardContainer.classList.add("suit-container")
-        cardContainer.classList.add(`suit-container_${color[i]}`)
         cardContainer.setAttribute("draggable", "true");
         suitCollection.append(cardContainer)
     }  
@@ -120,7 +119,8 @@ function createOpenCard(card){
     </div>`;
 
     cardDom.cardData = card;
-    cardDom.classList.add(`${card.suit}`, `${card.color}`);
+    cardDom.classList.add(`${card.suit}`);
+    cardDom.setAttribute("id", `${card.id}`)
     cardDom.classList.add("card");
     cardDom.setAttribute("draggable", "true");
     dragstart(cardDom, card)
@@ -183,8 +183,6 @@ function shuffleDeck(deck) {
 }
 
 function dropSuit(dropContainers) {
-    const hierarchy = ["1" ,"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
-
     dropContainers.forEach((container) => {
         container.addEventListener("dragover", (e) => {
             e.preventDefault(); 
@@ -195,24 +193,18 @@ function dropSuit(dropContainers) {
 
             const rawData = e.dataTransfer.getData("application/custom-data"); // Retrieve raw data
             const dropValue = JSON.parse(rawData); 
-            console.log("Dropped value:", dropValue.value);
 
             const children = container.children;
             if (children.length > 0) {
-                const lastCard = children[children.length - 1];
-                const lastCardValue = 13;
-                const nextCardValue = getNextCardValue(lastCardValue);
-                
-                if (hierarchy.indexOf(draggedValue) === hierarchy.indexOf(nextCardValue) + 1) {
-                    container.append(draggedValue);
+              
+                if (dropValue.value + 1 === card.value) {
+                    matchedCard(container, dropValue)
                 } else {
                     console.log("Card cannot be added in this order.");
                 }
             } else {
                 if (dropValue.value === 1) {
-                    console.log("value is true")
-                    let dropDom = createOpenCard(dropValue)
-                    container.append(dropDom)
+                    matchedCard(container, dropValue)
                 } else {
                     console.log("You must start with an Ace.");
                 }
@@ -240,10 +232,27 @@ function dropStack(cardDom, card){
         const dropValue = JSON.parse(rawData);     
         console.log(dropValue.value, card.value)
 
+        console.log(dropValue.id)
+
         if(dropValue.color !== card.color && dropValue.value + 1 === card.value){
-            let card = createOpenCard(dropValue)
-            cardDom.parentNode.append(card)
-        }
-        
+            matchedCard(cardDom, dropValue)
+        }   
      })
+}
+
+function matchedCard(container, drop){
+    let card = createOpenCard(drop)
+    if (container.classList.contains("suit-container")){
+        console.log("container is suit collector")
+        container.append(card)
+    } else {
+        container.parentNode.append(card)
+    }
+
+    const draggedCard = document.getElementById(`${drop.id}`);
+        if (draggedCard) {
+            console.log("Removing:", draggedCard);
+            draggedCard.remove(); // this doesnt always work. why?
+        }
+
 }
