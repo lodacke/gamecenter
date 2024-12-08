@@ -1,6 +1,5 @@
 import { gameBase } from "./API/gamecenter.js";
 import { main, nav } from "./Utilities/variables.js"
-import { TicTac } from "./games/tictac.js";
 import { swapCSS } from "./Utilities/swapCSS.js";
 
 function renderNav (){

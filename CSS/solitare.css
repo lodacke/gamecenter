@@ -1,0 +1,139 @@
+:root {
+    --card-height: 160px;
+    --card-width: 80px;
+}
+
+#solitare{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2%;
+}
+
+.top-row{
+    height: 25%;
+    width: 68.5%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.deck-view, .suit-collection{
+    display: flex;
+    gap: 15px;  
+}
+
+.deck, .deck-preview, .suit-container{
+    height: var(--card-height);
+    width: var(--card-width);
+    border: 1px solid white;
+    
+}
+
+.deck > *{
+top: 32px;
+}
+
+.card-container{
+    justify-content: center;
+    height: 65%;
+    width: 70%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 15px;
+}
+
+.card-position{
+    height: var(--card-height);
+    width: var(--card-width);
+    border: 1px solid white;
+
+}
+
+.card{
+    background-color: white;
+    height: var(--card-height);
+    width: var(--card-width);
+    position: absolute;
+    border: 1px solid black;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card > div, .card-bottom {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+
+.card > div >img, card-bottom > img{
+    height: 12px;
+    width: 16px;
+}
+
+.card > div > p{
+    margin: 2px;
+}
+.card-bottom {
+    margin-left: 76% !important; 
+    transform: rotate(180deg); 
+}
+
+.diamonds > .card-img, .hearts > .card-img, .clubs > .card-img, .spades > .card-img{
+    height: 150px;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.card.hearts > .card-img{
+    background-image: url("/media/heart.svg");
+}
+.card.diamonds > .card-img{
+    background-image: url("/media/diamond.svg");
+}
+.card.clubs > .card-img{
+    background-image: url("/media/cloves.svg");
+}
+.card.spades > .card-img{
+    background-image: url("/media/spades.svg");
+}
+
+.card:nth-child(2) {
+  top: 254px; 
+}
+
+.card:nth-child(3) {
+  top: 284px;  
+}
+
+.card:nth-child(4) {
+  top: 314px; 
+}
+
+.card:nth-child(5) {
+  top: 344px;  
+}
+
+.card:nth-child(6) {
+  top: 374px;  
+}
+
+.card:nth-child(7) {
+  top: 404px;  
+}
+
+.faceDown{
+    border-radius: 10px;
+    height: var(--card-height);
+    width: var(--card-width);
+    background-image: url("/media/backside-card.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+}
+
+.faceDown > *{
+    opacity: 0;
+}
+

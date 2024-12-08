@@ -52,7 +52,7 @@ function renderGameLogic(gamefield){
         board.replaceChildren()
         navBoard.replaceChildren()
     }
-    
+
     let retryButton = document.createElement("div");
     retryButton.classList.add("retry")
     retryButton.style.opacity = "0";
@@ -135,7 +135,6 @@ function winMove(gamefield){
         renderGameLogic(gamefield)
     })
 }
-
 
 function checkWinner(player, score) {
 
