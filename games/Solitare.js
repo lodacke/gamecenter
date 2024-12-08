@@ -53,15 +53,12 @@ export function renderSolitare () {
         cardContainer.classList.add("suit-container")
         cardContainer.classList.add(`suit-container_${color[i]}`)
         cardContainer.setAttribute("draggable", "true");
-        dragstart(cardContainer)
         suitCollection.append(cardContainer)
     }  
 
-    deckDisplay();
-
     let dropContainers = document.querySelectorAll(".suit-container");
-    let dropCards= document.querySelectorAll(".faceUp")
 
+    deckDisplay();
     dropSuit(dropContainers)
 }
 
@@ -81,16 +78,19 @@ function checkCard(){
 
 function getCard(typeofCard, array){
 
-    let cardDom; 
     for (let card of array) {
         if (!createdCards.find((c) => c.suit === card.suit && c.value === card.value)) {
             createdCards.push(card);
-            return createCard(card, typeofCard)
+            if(typeofCard === "faceDown"){
+                return createClosedCard(card)
+            } else {
+                return createOpenCard(card)
+            }
         }
     }
 }
 
-function createCard(card, typeofCard){
+function createOpenCard(card){
     let dressedCard;
     let dressedImg;
     let cardDom = document.createElement("div")
@@ -119,17 +119,30 @@ function createCard(card, typeofCard){
         <img src="${dressedImg}"></img>
     </div>`;
 
+    cardDom.cardData = card;
     cardDom.classList.add(`${card.suit}`, `${card.color}`);
-    if(typeofCard === "faceUp"){
-        cardDom.classList.add("card");
-        cardDom.setAttribute("draggable", "true");
-        dragstart(cardDom, card)
-    } else {
-        cardDom.classList.add("faceDown");
-        cardDom.classList.add("card");
-    }
+    cardDom.classList.add("card");
+    cardDom.setAttribute("draggable", "true");
+    dragstart(cardDom, card)
+    dropStack(cardDom, card)
 
     return cardDom;   
+}
+
+function createClosedCard(card){
+
+    let cardDom;
+    if(typeof card === "object"){
+        cardDom = document.createElement("div");
+    } else {
+        cardDom = card;
+    }
+    cardDom.classList.add("card", "faceDown")
+    cardDom.addEventListener("dragstart", (e) => {
+        e.dataTransfer.setData("application/custom-data", JSON.stringify(card));
+    });
+    dragstart(cardDom, card)
+    return cardDom;
 }
 
 function deckDisplay() {
@@ -137,30 +150,28 @@ function deckDisplay() {
     let deckDom = document.querySelector(".deck");
     let previewDom = document.querySelector(".deck-preview");
 
+    console.log(globalDeck);
+
     for(let i = 0; i < globalDeck.length; i++){
-        let faceDownCard = getCard("faceDown", globalDeck);
+        let faceDownCard = getCard("faceDown", globalDeck); 
         deckDom.append(faceDownCard);
     }
 
     let facingDownCards = deckDom.querySelectorAll('.card');
 
-    for (let i = 0; i < facingDownCards.length; i++) {
+    for (let i = 0; i < globalDeck.length; i++) {
         let card = facingDownCards[i];
         card.addEventListener("click", () => {
-            card.classList.remove("faceDown");
-            card.classList.add("card-preview");
-            card.setAttribute("draggable", "true")
-            previewDom.append(card);
+            let openCard = createOpenCard(globalDeck[i])    
+            previewDom.append(openCard);
         });
 
         deckDom.children[0].addEventListener("click", () => { 
             for(let i = 0; i < previewDom.children.length; i++){
-                card.classList.add("faceDown");
-                card.setAttribute("draggable", "false")
-                deckDom.append(card)
+                console.log(globalDeck[i])
+                createClosedCard(globalDeck[i])
             }    
         }) 
-
     }
 }
 
@@ -200,7 +211,7 @@ function dropSuit(dropContainers) {
             } else {
                 if (dropValue.value === 1) {
                     console.log("value is true")
-                    let dropDom = createCard(dropValue, "faceUp")
+                    let dropDom = createOpenCard(dropValue)
                     container.append(dropDom)
                 } else {
                     console.log("You must start with an Ace.");
@@ -210,13 +221,29 @@ function dropSuit(dropContainers) {
     });
 }
 
-function getNextCardValue(lastCardValue) {
-    const index = hierarchy.indexOf(lastCardValue);
-    return index !== -1 && index < hierarchy.length - 1 ? hierarchy[index + 1] : null;
-}
-
 function dragstart(element, data){
     element.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("application/custom-data", JSON.stringify(data));
+
      }); 
+}
+
+function dropStack(cardDom, card){
+
+    cardDom.addEventListener("dragover", (e) => {
+            e.preventDefault(); 
+        });
+
+     cardDom.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const rawData = e.dataTransfer.getData("application/custom-data");
+        const dropValue = JSON.parse(rawData);     
+        console.log(dropValue.value, card.value)
+
+        if(dropValue.color !== card.color && dropValue.value + 1 === card.value){
+            let card = createOpenCard(dropValue)
+            cardDom.parentNode.append(card)
+        }
+        
+     })
 }

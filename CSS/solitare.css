@@ -28,12 +28,13 @@
     border: 1px solid white;
 }
 
-.card-preview{
+.deck-preview > *{
     align-self: center;
     top: 30px !important;
 }
 
 .deck-preview > * {
+  position: absolute;
   animation: foldOver 0.3s forwards; 
 }
 
@@ -63,7 +64,6 @@
     height: var(--card-height);
     width: var(--card-width);
     border: 1px solid white;
-
 }
 
 .card{
@@ -119,25 +119,38 @@
 .card:nth-child(2) {
   top: 254px; 
 }
-
 .card:nth-child(3) {
   top: 284px;  
 }
-
 .card:nth-child(4) {
   top: 314px; 
 }
-
 .card:nth-child(5) {
   top: 344px;  
 }
-
 .card:nth-child(6) {
   top: 374px;  
 }
-
 .card:nth-child(7) {
   top: 404px;  
+}
+.card:nth-child(8) {
+  top: 444px;  
+}
+.card:nth-child(9) {
+  top: 474px;  
+}
+.card:nth-child(10) {
+  top: 504px;  
+}
+.card:nth-child(11) {
+  top: 514px;  
+}
+.card:nth-child(12) {
+  top: 544px;  
+}
+.card:nth-child(13) {
+  top: 574px;  
 }
 
 .faceDown{
