@@ -53,6 +53,7 @@ export function renderSolitare () {
         cardContainer.classList.add("suit-container")
         cardContainer.classList.add(`suit-container_${color[i]}`)
         cardContainer.setAttribute("draggable", "true");
+        dragstart(cardContainer)
         suitCollection.append(cardContainer)
     }  
 
@@ -81,52 +82,54 @@ function checkCard(){
 function getCard(typeofCard, array){
 
     let cardDom; 
-
     for (let card of array) {
         if (!createdCards.find((c) => c.suit === card.suit && c.value === card.value)) {
             createdCards.push(card);
-       
-            let dressedCard;
-            let dressedImg;
-
-            cardDom = document.createElement("div");
-
-            switch(card.value) {
-                case 11: dressedCard = 'J'; break;
-                case 12: dressedCard = 'Q'; break;
-                case 13: dressedCard = 'K'; break;
-                case 1: dressedCard = 'A'; break;
-                default: dressedCard = card.value;
-            }
-            switch(card.suit) {
-                case "diamonds": dressedImg = "../media/diamond.svg"; break;
-                case "clubs": dressedImg = "../media/cloves.svg"; break;
-                case "spades": dressedImg = "../media/spades.svg"; break;
-                case "hearts": dressedImg = "../media/heart.svg"; break;
-            }
-
-            cardDom.innerHTML = `
-            <div>
-                <p>${dressedCard}</p>
-                <img src="${dressedImg}"></img>
-            </div>
-            <div class="card-img"></div>
-            <div class="card-bottom">
-                <p>${dressedCard}</p>
-                <img src="${dressedImg}"></img>
-            </div>`;
-
-            cardDom.classList.add(`${card.suit}`, `${card.color}`);
-            if(typeofCard === "faceUp"){
-                cardDom.classList.add("card");
-                cardDom.setAttribute("draggable", "true");
-            } else {
-                cardDom.classList.add("faceDown");
-                cardDom.classList.add("card");
-            }
-            return cardDom;
+            return createCard(card, typeofCard)
         }
     }
+}
+
+function createCard(card, typeofCard){
+    let dressedCard;
+    let dressedImg;
+    let cardDom = document.createElement("div")
+
+    switch(card.value) {
+        case 11: dressedCard = 'J'; break;
+        case 12: dressedCard = 'Q'; break;
+        case 13: dressedCard = 'K'; break;
+        case 1: dressedCard = 'A'; break;
+        default: dressedCard = card.value;
+    }
+    switch(card.suit) {
+        case "diamonds": dressedImg = "../media/diamond.svg"; break;
+        case "clubs": dressedImg = "../media/cloves.svg"; break;
+        case "spades": dressedImg = "../media/spades.svg"; break;
+        case "hearts": dressedImg = "../media/heart.svg"; break;
+    }
+    cardDom.innerHTML = `
+    <div>
+        <p>${dressedCard}</p>
+        <img src="${dressedImg}"></img>
+    </div>
+    <div class="card-img"></div>
+    <div class="card-bottom">
+        <p>${dressedCard}</p>
+        <img src="${dressedImg}"></img>
+    </div>`;
+
+    cardDom.classList.add(`${card.suit}`, `${card.color}`);
+    if(typeofCard === "faceUp"){
+        cardDom.classList.add("card");
+        cardDom.setAttribute("draggable", "true");
+        dragstart(cardDom, card)
+    } else {
+        cardDom.classList.add("faceDown");
+        cardDom.classList.add("card");
+    }
+
+    return cardDom;   
 }
 
 function deckDisplay() {
@@ -169,7 +172,7 @@ function shuffleDeck(deck) {
 }
 
 function dropSuit(dropContainers) {
-    const hierarchy = ["A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+    const hierarchy = ["1" ,"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
 
     dropContainers.forEach((container) => {
         container.addEventListener("dragover", (e) => {
@@ -179,15 +182,14 @@ function dropSuit(dropContainers) {
         container.addEventListener("drop", (e) => {
             e.preventDefault();
 
-            const draggedValue = e.dataTransfer.getData("key");
-            const draggedInnerHTML = draggedValue.innerHTML;
-            console.log(draggedInnerHTML)
-            console.log("Dropped value:", draggedValue);
+            const rawData = e.dataTransfer.getData("application/custom-data"); // Retrieve raw data
+            const dropValue = JSON.parse(rawData); 
+            console.log("Dropped value:", dropValue.value);
 
             const children = container.children;
             if (children.length > 0) {
                 const lastCard = children[children.length - 1];
-                const lastCardValue = lastCard.querySelector("div > p").innerText; // Assuming the value is in a <p> tag
+                const lastCardValue = 13;
                 const nextCardValue = getNextCardValue(lastCardValue);
                 
                 if (hierarchy.indexOf(draggedValue) === hierarchy.indexOf(nextCardValue) + 1) {
@@ -196,17 +198,25 @@ function dropSuit(dropContainers) {
                     console.log("Card cannot be added in this order.");
                 }
             } else {
-                if (draggedValue === "A") {
-                    container.append(draggedValue);
+                if (dropValue.value === 1) {
+                    console.log("value is true")
+                    let dropDom = createCard(dropValue, "faceUp")
+                    container.append(dropDom)
                 } else {
                     console.log("You must start with an Ace.");
                 }
             }
         });
     });
+}
 
-    function getNextCardValue(lastCardValue) {
-        const index = hierarchy.indexOf(lastCardValue);
-        return index !== -1 && index < hierarchy.length - 1 ? hierarchy[index + 1] : null;
-    }
+function getNextCardValue(lastCardValue) {
+    const index = hierarchy.indexOf(lastCardValue);
+    return index !== -1 && index < hierarchy.length - 1 ? hierarchy[index + 1] : null;
+}
+
+function dragstart(element, data){
+    element.addEventListener("dragstart", (e) => {
+        e.dataTransfer.setData("application/custom-data", JSON.stringify(data));
+     }); 
 }
