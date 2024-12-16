@@ -61,7 +61,7 @@ export function renderSolitare () {
     dropSuit(dropContainers)
 }
 
-
+// find id that isnt string to send to get correct card
 function checkCard(){
     let deck = renderDeck();
     for (let i = deck.length - 1; i > 0; i--) {
@@ -89,9 +89,24 @@ function getCard(typeofCard, array){
     }
 }
 
+function getCorrectCard(domID) {
+    console.log(globalDeck)
+    let card = globalDeck.find(card => card.id === domID);
+    console.log(card)
+    return card;
+}
+
 function createOpenCard(card){
+    console.log(card)
+
     let dressedCard;
     let dressedImg;
+
+    if(typeof card === "string"){
+        console.log("typ of object is a dom") // why dont i ever 
+        card = getCorrectCard(card.id)
+    }
+    console.log(card)
     let cardDom = document.createElement("div")
 
     switch(card.value) {
@@ -132,12 +147,17 @@ function createOpenCard(card){
 function createClosedCard(card){
 
     let cardDom;
+    let id;
     if(typeof card === "object"){
+        id = card.id
         cardDom = document.createElement("div");
     } else {
         cardDom = card;
+        id = document.getElementById(`${id}`)
     }
+
     cardDom.classList.add("card", "faceDown")
+    cardDom.setAttribute("id", id)
     cardDom.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("application/custom-data", JSON.stringify(card));
     });
@@ -162,13 +182,12 @@ function deckDisplay() {
     for (let i = 0; i < globalDeck.length; i++) {
         let card = facingDownCards[i];
         card.addEventListener("click", () => {
-            let openCard = createOpenCard(globalDeck[i])    
+            let openCard = createOpenCard(card.id)    
             previewDom.append(openCard);
         });
 
         deckDom.children[0].addEventListener("click", () => { 
             for(let i = 0; i < previewDom.children.length; i++){
-                console.log(globalDeck[i])
                 createClosedCard(globalDeck[i])
             }    
         }) 
