@@ -175,7 +175,6 @@ function createClosedCard(card){
     return cardDom;
 }
 
-
 function rotateDeck(deckDom){
 
     let facingDownDeck = deckDom.querySelectorAll(".card");
@@ -206,7 +205,6 @@ function rotateDeck(deckDom){
     });
 }
 
-
 function shuffleDeck(deck) {
     for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -226,13 +224,14 @@ function dropSuit(dropContainers) {
             e.stopPropagation(); 
 
             const rawData = e.dataTransfer.getData("application/custom-data"); // Retrieve raw data
-            const dropValue = JSON.parse(rawData); 
+            let dropValue = JSON.parse(rawData)
             console.log(dropValue)
+
 
             const children = container.children;
             if (children.length > 0) {
               
-                if (dropValue.value + 1 === card.value) {
+                if (dropValue.value + 1 === container.node.value) { // need to add a correct term here for containr latest child dateset value
                     matchedCard(container, dropValue)
                 } else {
                     console.log("Card cannot be added in this order.");
@@ -255,7 +254,7 @@ function dragstart(element, data){
      }); 
 }
 
-function dropStack(cardDom, card){
+function dropStack(cardDom){
 
     cardDom.addEventListener("dragover", (e) => {
             e.preventDefault(); 
@@ -268,19 +267,20 @@ function dropStack(cardDom, card){
 
         const rawData = e.dataTransfer.getData("application/custom-data");
         const dropValue = JSON.parse(rawData);     
-        console.log(dropValue.value, card.value)
+
+        let dataInfo = JSON.parse(cardDom.dataset.cardInfo); 
+        console.log(dataInfo)
+        console.log(dropValue.value, dataInfo.value)
 
         console.log(dropValue.id)
 
-        if(dropValue.color !== card.color && dropValue.value + 1 === card.value){
+        if(dropValue.color !== dataInfo.color && dropValue.value + 1 === dataInfo.value){
             matchedCard(cardDom, dropValue)
         }   
      })
 }
 
 function matchedCard(container, drop){
-
-    console.log(drop)
 
     let card = createOpenCard(drop)
     if (container.classList.contains("suit-container")){ 
