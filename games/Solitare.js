@@ -29,89 +29,63 @@ export function renderSolitare () {
         shuffleDeck(globalDeck);
     }
 
-    const cards = globalDeck.slice(0, 28);
-    globalDeck = globalDeck.slice(28);
-
     let cardContainer = document.querySelector(".card-container");
     for(let i = 1; i <= 7; i++){
        let cardPosition = document.createElement("div");
-       cardPosition.classList.add(`card-position`);
+       cardPosition.setAttribute("id", `card-position`);
        cardContainer.append(cardPosition);
 
         for (let j = 0; j < i; j++) { 
             let cardType = (j === i - 1) ? "faceUp" : "faceDown";    
-            let card = getCard(cardType, cards);
-            cardPosition.append(card);
+            let card = distributeCards(cardType, globalDeck);
+            cardPosition.append(card)
         }
     }
 
     let color = ["hearts", "diamonds", "clubs", "spades"]
 
-    let suitCollection = document.querySelector(".suit-collection"); //totalt 28 kort här
+    let suitCollection = document.querySelector(".suit-collection"); 
     for(let i = 0; i < color.length; i++){
         let cardContainer = document.createElement("div");
-        cardContainer.classList.add("suit-container")
-        cardContainer.setAttribute("draggable", "true");
+        cardContainer.setAttribute("id", "suit-container")
         suitCollection.append(cardContainer)
     }  
 
+    let cardPositions = document.querySelectorAll(".card-position")
     let dropContainers = document.querySelectorAll(".suit-container");
 
-    // create cards for deck displat
     let deckDom = document.querySelector(".deck");
 
     for(let i = 0; i < globalDeck.length; i++){
-        let faceDownCard = getCard("faceDown", globalDeck); 
+        let faceDownCard = distributeCards("faceDown", globalDeck); 
         deckDom.append(faceDownCard);
     }
 
     rotateDeck(deckDom)
     dropSuit(dropContainers)
+    dropCardPositions(cardPositions)
 }
 
-// find id that isnt string to send to get correct card
-function checkCard(){
-    let deck = renderDeck();
-    for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]]; 
-    } 
-
-    const cards = deck.slice(0, 28); 
-    const remainingDeck = deck.slice(28); 
-
-    return {cards, remainingDeck}
-}
-
-function getCard(typeofCard, array){
-
-    for (let card of array) {
+function distributeCards(typeofCard, array) {
+    for (let i = 0; i < array.length; i++) {
+        const card = array[i];
         if (!createdCards.find((c) => c.suit === card.suit && c.value === card.value)) {
             createdCards.push(card);
-            if(typeofCard === "faceDown"){
-                return createClosedCard(card)
-            } else {
-                return createOpenCard(card)
+            array.splice(i, 1); 
+            if (typeofCard === "faceDown") {
+                return createClosedCard(card);
+            }
+            if(typeofCard === "faceUp") {
+                return createOpenCard(card);
             }
         }
     }
-}
-
-function getCorrectCard(domID) {
-
-    let card = globalDeck.find(card => card.id === domID);
-    return card;
 }
 
 function createOpenCard(card){
 
     let dressedCard;
     let dressedImg;
-
-    if(typeof card === "string"){
-        console.log("typ of object is a dom") 
-        card = getCorrectCard(card)
-    }
 
     let cardDom = document.createElement("div")
 
@@ -153,37 +127,31 @@ function createOpenCard(card){
 function createClosedCard(card){
 
     let cardDom;
-    let id;
-    if(typeof card === "object"){
-        id = card.id
-        cardDom = document.createElement("div");
-    } else {
-        cardDom = card;
-        id = document.getElementById(`${id}`)
-    }
-
-    if(!cardDom.dataset.cardData){
-        console.log("card lacks data")
-    }
+    let id = card.id
+    cardDom = document.createElement("div");
 
     cardDom.classList.add("card", "faceDown")
     cardDom.setAttribute("id", id)
-    cardDom.addEventListener("dragstart", (e) => {
-        e.dataTransfer.setData("application/custom-data", JSON.stringify(card));
-    });
+    cardDom.dataset.cardInfo = JSON.stringify(card)
     dragstart(cardDom, card)
+
+    if(!cardDom.dataset.cardInfo){
+        console.log("card lacks data")
+    }
     return cardDom;
 }
 
 function rotateDeck(deckDom){
-
+    console.log(globalDeck.length);
     let facingDownDeck = deckDom.querySelectorAll(".card");
     let previewDom = document.querySelector(".deck-preview");
 
     for (let i = 0; i < globalDeck.length; i++) {
         let card = facingDownDeck[i];
         card.addEventListener("click", () => {
-            let openCard = createOpenCard(card.id)   
+            console.log(card.dataset.cardInfo)
+            let cardInfo = JSON.parse(card.dataset.cardInfo)
+            let openCard = createOpenCard(cardInfo)   
             previewDom.append(openCard);
             card.remove()
         });
@@ -251,6 +219,12 @@ function dragstart(element, data){
     element.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("application/custom-data", JSON.stringify(data)); 
 
+        const parent = element.parentNode;
+        if (parent && parent.id) {
+            e.dataTransfer.setData("source-container-id", parent.id);
+        } else {
+            console.warn("Parent container does not have an ID.");
+        }
      }); 
 }
 
@@ -266,18 +240,44 @@ function dropStack(cardDom){
         e.stopPropagation(); 
 
         const rawData = e.dataTransfer.getData("application/custom-data");
-        const dropValue = JSON.parse(rawData);     
+        const dropValue = JSON.parse(rawData);    
+
+        const sourceId = e.dataTransfer.getData("source-container-id"); 
+        const source = document.getElementById(sourceId); // this returns null
+        console.log(source)
 
         let dataInfo = JSON.parse(cardDom.dataset.cardInfo); 
         console.log(dataInfo)
         console.log(dropValue.value, dataInfo.value)
 
-        console.log(dropValue.id)
-
         if(dropValue.color !== dataInfo.color && dropValue.value + 1 === dataInfo.value){
-            matchedCard(cardDom, dropValue)
+            matchedCard(cardDom, dropValue);
         }   
      })
+}
+
+function dropCardPositions(containers){
+    containers.forEach((container) => {
+        container.addEventListener("dragover", (e) => {
+            e.preventDefault(); 
+            e.stopPropagation(); 
+        });
+
+        container.addEventListener("drop", (e) => {
+            e.preventDefault();
+            e.stopPropagation(); 
+
+            const rawData = e.dataTransfer.getData("application/custom-data"); 
+                let dropValue = JSON.parse(rawData)
+
+               console.log(dropValue)
+               if(dropValue.value === 13){
+                    matchedCard(container, dropValue)
+               } else {
+                console.log(dropValue.value)
+               }
+            })
+        });
 }
 
 function matchedCard(container, drop){
@@ -294,13 +294,13 @@ function matchedCard(container, drop){
         if (draggedCard) {
             console.log("Removing:", draggedCard);
             draggedCard.remove(); // this only works in some cases, but i always get console.log. why?
-            turnCard(drop)
+
         }
 }
 
 function turnCard(drop){
 
     const draggedElement = document.getElementById(drop.id);
-    const previousSibling = draggedElement.previousElementSibling; // this renders the current simbling, i want to know the sibling of the meent before element was deopped. is that possible? 
-    console.log(previousSibling)
+    const previousSibling = draggedElement.previousElementSibling; 
+    
 }
