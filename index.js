@@ -5,7 +5,7 @@ import { swapCSS } from "./Utilities/swapCSS.js";
 function renderNav (){
 
     gameBase.forEach(game => {
-        let option = document.createElement("div"); 
+        let option = document.createElement("button"); 
         option.textContent = game.name;
 
         option.addEventListener("click",() => {
@@ -21,9 +21,8 @@ renderLanding();
 export function renderLanding(){
 
     swapCSS("landing");
+    main.id = "landing";
     main.replaceChildren()
-
-    main.setAttribute("id", "landing");
 
     main.innerHTML = `
     <div class="container">

@@ -12,7 +12,7 @@ export function TicTac() {
         return; 
     }
 
-    main.setAttribute("id", "tic-tac")
+    main.id = "tic-tac";
     const status = document.createElement("p");
     status.classList.add("status");
     let container = document.createElement("div");

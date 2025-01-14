@@ -3,7 +3,7 @@
     --card-width: 80px;
 }
 
-#solitare{
+main{
     display: flex;
     flex-direction: column;
     justify-content: center;

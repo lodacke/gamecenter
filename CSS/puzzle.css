@@ -1,0 +1,115 @@
+main {
+    width: 60vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: white;
+}
+
+.puzzle-display{
+    width: 164px;
+    height: 164px;
+    background-image: url("/media/puzzle/puzzle-outline.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-bottom: 4%;
+    position: relative;
+}
+
+.puzzle-pieces{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); 
+    grid-template-rows: repeat( 4, 1fr);
+    place-items: center;
+    gap: 1.5vw;
+}
+
+.puzzle-pieces > *{
+    height: 41px;
+    width: 41px;
+    cursor: pointer;
+    overflow: hidden;
+    border: 0.3px solid black;
+}
+
+#pzl1 {
+    grid-row: 2;
+    grid-column: 4;
+}
+
+#pzl2 {
+    grid-row: 1;
+    grid-column: 2;
+}
+
+#pzl3 {
+    grid-row: 3;
+    grid-column: 1;
+}
+
+#pzl4 {
+    grid-row: 4;
+    grid-column: 3;
+}
+
+#pzl5 {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+#pzl6 {
+    grid-row: 3;
+    grid-column: 5;
+}
+
+#pzl7 {
+    grid-row: 1;
+    grid-column: 3;
+}
+
+#pzl8 {
+    grid-row: 4;
+    grid-column: 2;
+}
+
+#pzl9 {
+    grid-row: 1;
+    grid-column: 5;
+}
+
+#pzl10 {
+    grid-row: 3;
+    grid-column: 4;
+}
+
+#pzl11 {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+#pzl12 {
+    grid-row: 4;
+    grid-column: 1;
+}
+
+#pzl13 {
+    grid-row: 3;
+    grid-column: 3;
+}
+
+#pzl14 {
+    grid-row: 1;
+    grid-column: 4;
+}
+
+#pzl15 {
+    grid-row: 2;
+    grid-column: 3;
+}
+
+#pzl16 {
+    grid-row: 4;
+    grid-column: 5;
+}

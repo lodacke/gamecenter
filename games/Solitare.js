@@ -8,7 +8,7 @@ let createdCards = [];
 export function renderSolitare () {
 
     swapCSS("solitare");
-    main.setAttribute("id", "solitare");
+    main.id = "solitare";
     main.replaceChildren();
 
     main.innerHTML = `
