@@ -2,6 +2,7 @@ import { TicTac } from '../games/tictac.js';
 import { renderLanding } from '../index.js';
 import { renderSolitare } from '../games/solitare.js';
 import { dropPuzzle } from '../games/dropPuzzle.js';
+import { rendertimeLine } from '../games/timeLine.js';
 
 export const gameBase = [
     {
@@ -20,6 +21,10 @@ export const gameBase = [
     {
         name: "Puzzle",
         render: dropPuzzle
+    }, 
+    {
+        name: "Timeline",
+        render: rendertimeLine
     }
 
 ]
@@ -336,3 +341,157 @@ export const puzzle = [
 </svg>
 `
 ];
+
+export const agents = [
+  {
+    "name": "Greta Thunberg",
+    "date": 2003,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Greta_Thunberg_2019.jpg",
+    "id": 1
+  },
+  {
+    "name": "Armand Duplantis",
+    "date": 1999,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Armand_Duplantis_2022.jpg",
+      "id": 2
+  },
+  {
+    "name": "Zara Larsson",
+    "date": 1997,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Zara_Larsson_2019.jpg",
+      "id": 3
+  },
+  {
+    "name": "Loreen",
+    "date": 1983,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Loreen_2023.jpg",
+      "id": 4
+  },
+  {
+    "name": "Tim Bergling (Avicii)",
+    "date": 1989,
+    "img": "https://sv.wikipedia.org/wiki/Avicii#/media/Fil:Avicii_2014_003.jpg",
+      "id": 5
+  },
+  {
+    "name": "Zlatan Ibrahimović",
+    "date": 1981,
+    "img": "https://sv.wikipedia.org/wiki/Zlatan_Ibrahimovi%C4%87#/media/Fil:Zlatan_Ibrahimovi%C4%87_June_2018.jpg",
+      "id": 6
+  },
+  {
+    "name": "Alicia Vikander",
+    "date": 1988,
+    "img": "https://sv.wikipedia.org/wiki/Alicia_Vikander#/media/Fil:Alicia_Vikander_at_the_2024_Toronto_International_Film_Festival_2_(cropped).jpg",
+      "id": 7
+  },
+  {
+    "name": "Alexander Skarsgård",
+    "date": 1976,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Alexander_Skarsg%C3%A5rd_2016.jpg",
+      "id": 8
+  },
+  {
+    "name": "Camilla Läckberg",
+    "date": 1974,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Camilla_L%C3%A4ckberg_2012.jpg",
+      "id": 9
+  },
+  {
+    "name": "Björn Borg",
+    "date": 1956,
+    "img": "https://sv.wikipedia.org/wiki/Bj%C3%B6rn_Borg#/media/Fil:Bj%C3%B6rn_Borg_2013-11-06_001_(cropped).jpg",
+      "id": 10
+  },
+  {
+    "name": "Ingrid Bergman",
+    "date": 1915,
+    "img": "https://sv.wikipedia.org/wiki/Ingrid_Bergman#/media/Fil:Ingrid_Bergman,_Gaslight_1944.jpg",
+      "id": 11
+  },
+  {
+    "name": "Ingmar Bergman",
+    "date": 1918,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Ingmar_Bergman_1965.jpg",
+      "id": 12
+  },
+  
+  {
+    "name": "Astrid Lindgren",
+    "date": 1907,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Astrid_Lindgren_1994.jpg",
+      "id": 13
+  },
+  {
+    "name": "Alfred Nobel",
+    "date": 1833,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Alfred_Nobel3.jpg",
+      "id": 14
+  },
+  {
+    "name": "Anders Celsius",
+    "date": 1701,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Anders-Celsius.jpeg",
+      "id": 15
+  },
+  {
+    "name": "Greta Garbo",
+    "date": 1905,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Greta_Garbo_1925.jpg",
+      "id": 16
+  },
+  {
+    "name": "ABBA",
+    "date": 1972,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/5/5e/ABBA_1974.jpg",
+      "id": 17
+  },
+  {
+    "name": "Max Martin",
+    "date": 1971,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Max_Martin_2015.jpg",
+      "id": 18
+  },
+  {
+    "name": "Caroline Winberg",
+    "date": 1985,
+    "img": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Caroline_Winberg_2013.jpg",
+      "id": 19
+  },
+  {
+    "name": "Robert Gustafsson",
+    "date": 1964,
+    "img": "https://sv.wikipedia.org/wiki/Robert_Gustafsson#/media/Fil:Robert_Gustafsson,_2015.jpg",
+      "id": 20
+  },
+  {
+    "name": "Malin Åkerman",
+    "date": 1978,
+    "img": "https://sv.wikipedia.org/wiki/Malin_%C3%85kerman#/media/Fil:Malin_%C3%85kerman_Eurovision_Song_Contest_2024_Final_Malm%C3%B6.jpg",
+      "id": 21
+  },
+  {
+    "name": "Noomi Rapace",
+    "date": 1979,
+    "img": "https://sv.wikipedia.org/wiki/Noomi_Rapace#/media/Fil:Noomi_Rapace_PFW_2019.jpg",
+      "id": 22
+  },
+  {
+    "name": "Prince Carl Philip",
+    "date": 1979,
+    "img": "https://sv.wikipedia.org/wiki/Prins_Carl_Philip#/media/Fil:Prince_Carl_Philip_in_January_2014.jpg",
+      "id": 23
+  },
+  {
+    "name": "Sven-Göran Eriksson",
+    "date": 1948,
+    "img": "https://sv.wikipedia.org/wiki/Sven-G%C3%B6ran_Eriksson#/media/Fil:Sven-Goran_Eriksson_2012.jpg",
+      "id": 24
+  },
+  {
+    "name": "Greta Thunberg",
+    "date": 2003,
+    "img": "https://sv.wikipedia.org/wiki/Greta_Thunberg#/media/Fil:Greta_Thunberg_Stockholm_2024_(3x4_cropped).jpg",
+      "id": 25
+  }
+]

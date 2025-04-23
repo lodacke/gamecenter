@@ -8,8 +8,10 @@ export function dropPuzzle(){
      main.id = "puzzle";
 
      main.innerHTML = `
-     <div class="puzzle-display"></div>
-     <div class="puzzle-pieces"></div>
+     <div class="puzzle-container">
+        <div class="puzzle-display"></div>
+        <div class="puzzle-pieces"></div>
+     </div>
      `;
 
      puzzle.forEach((element, i) => {

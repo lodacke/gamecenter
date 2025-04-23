@@ -142,7 +142,7 @@ function createClosedCard(card){
 }
 
 function rotateDeck(deckDom){
-    console.log(globalDeck.length);
+    
     let facingDownDeck = deckDom.querySelectorAll(".card");
     let previewDom = document.querySelector(".deck-preview");
 
