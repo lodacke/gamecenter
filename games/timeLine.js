@@ -84,17 +84,13 @@ function createPlacedCard(agent, container, placedCard){
     let card = document.createElement("div");
     card.classList.add("placed")
     card.innerText = agent.date;
-    
+
     card.style.transform = 'translateY(-50px)';
     card.style.opacity = '0';
 
     container.append(card);
 
-    requestAnimationFrame(() => {
-        card.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
-        card.style.transform = 'translateY(0)';
-        card.style.opacity = '1';
-    });
+
 }
 
 function newCard(CurrAgents){
